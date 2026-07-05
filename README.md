@@ -21,10 +21,8 @@ tests/
   checkout/        add / fulfil / remove cart items        @checkout
   account/         preference filters + clear              @account
   search/          docs site load + navigation            @search
-  api-mocking/     ┐
-  boxed-steps/     │ upstream Playwright examples, kept
-  boxed-steps-pom/ │ as extra ungrouped "areas"
-  clock/           ┘
+  api-mocking/     ┐ upstream Playwright examples, kept
+  clock/           ┘ as extra ungrouped "areas"
 ```
 
 Tests run against stable public apps (`demo.playwright.dev`, `playwright.dev`,
@@ -39,6 +37,7 @@ npx playwright test --grep @smoke   # by tag
 
 ## Credits
 
-The `api-mocking`, `boxed-steps`, `boxed-steps-pom`, and `clock` examples are
-derived from [microsoft/playwright-examples](https://github.com/microsoft/playwright-examples)
-(MIT). See `LICENSE`.
+The `api-mocking` and `clock` examples are derived from
+[microsoft/playwright-examples](https://github.com/microsoft/playwright-examples)
+(MIT). See `LICENSE`. (The upstream `boxed-steps` examples were dropped — their
+target site, `cloudtesting.contosotraders.com`, no longer resolves.)
