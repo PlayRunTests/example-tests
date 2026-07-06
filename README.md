@@ -26,7 +26,7 @@ tests/
 ```
 
 Tests run against stable public apps (`demo.playwright.dev`, `playwright.dev`,
-`the-internet.herokuapp.com`) so they need no local server.
+`saucedemo.com`) so they need no local server.
 
 ```bash
 npm install

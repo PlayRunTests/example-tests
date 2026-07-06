@@ -1,38 +1,40 @@
 import { test, expect } from '@playwright/test';
 
-// Auth flows against the classic public "the-internet" login form.
+// Auth flows against the SauceLabs demo shop (CDN-hosted, very reliable).
 // Domain: @auth (folder + tag). Type tags drive smoke/regression grouping.
-const LOGIN = 'https://the-internet.herokuapp.com/login';
+const LOGIN = 'https://www.saucedemo.com/';
 
 test.describe('Authentication', () => {
   test('a valid user can log in', { tag: ['@auth', '@smoke'] }, async ({ page }) => {
     await page.goto(LOGIN);
-    await page.locator('#username').fill('tomsmith');
-    await page.locator('#password').fill('SuperSecretPassword!');
-    await page.getByRole('button', { name: 'Login' }).click();
+    await page.locator('[data-test="username"]').fill('standard_user');
+    await page.locator('[data-test="password"]').fill('secret_sauce');
+    await page.locator('[data-test="login-button"]').click();
 
-    await expect(page).toHaveURL(/\/secure/);
-    await expect(page.locator('.flash.success')).toContainText('You logged into a secure area!');
+    await expect(page).toHaveURL(/inventory\.html/);
+    await expect(page.locator('.title')).toHaveText('Products');
   });
 
   test('an invalid password is rejected', { tag: ['@auth', '@regression'] }, async ({ page }) => {
     await page.goto(LOGIN);
-    await page.locator('#username').fill('tomsmith');
-    await page.locator('#password').fill('not-the-password');
-    await page.getByRole('button', { name: 'Login' }).click();
+    await page.locator('[data-test="username"]').fill('standard_user');
+    await page.locator('[data-test="password"]').fill('not-the-password');
+    await page.locator('[data-test="login-button"]').click();
 
-    await expect(page.locator('.flash.error')).toContainText('Your password is invalid!');
+    await expect(page.locator('[data-test="error"]')).toContainText(
+      'Username and password do not match',
+    );
   });
 
   test('a logged-in user can log out', { tag: ['@auth', '@regression'] }, async ({ page }) => {
     await page.goto(LOGIN);
-    await page.locator('#username').fill('tomsmith');
-    await page.locator('#password').fill('SuperSecretPassword!');
-    await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page).toHaveURL(/\/secure/);
+    await page.locator('[data-test="username"]').fill('standard_user');
+    await page.locator('[data-test="password"]').fill('secret_sauce');
+    await page.locator('[data-test="login-button"]').click();
+    await expect(page).toHaveURL(/inventory\.html/);
 
-    await page.getByRole('link', { name: 'Logout' }).click();
-    await expect(page).toHaveURL(/\/login/);
-    await expect(page.locator('.flash.success')).toContainText('You logged out');
+    await page.getByRole('button', { name: 'Open Menu' }).click();
+    await page.locator('[data-test="logout-sidebar-link"]').click();
+    await expect(page.locator('[data-test="login-button"]')).toBeVisible();
   });
 });
